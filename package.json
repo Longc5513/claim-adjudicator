@@ -1,0 +1,12 @@
+{
+  "name": "claim-adjudicator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "author": "Longc5513 <longc5513@gmail.com>",
+  "description": "A reusable intelligent contract primitive for adversarial claim adjudication with consensus on GenLayer.",
+  "scripts": {
+    "test": "node --test tests/submission-proof.test.mjs",
+    "verify": "node --test tests/submission-proof.test.mjs"
+  }
+}
