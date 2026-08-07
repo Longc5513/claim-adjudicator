@@ -211,12 +211,23 @@ genlayer deploy --contract contracts/claim_adjudicator.py
 
 ### Live Bradbury Testnet Deployment
 
-Updated deployment on **August 4, 2026**:
+Updated deployment on **August 7, 2026** — fixes close_evidence lifecycle gap:
 
-- Contract address: `0xae909D9ea0867fB846e948C5636EAb56b73033e7`
-- Deployment tx: `0x7641fb2c257578e4319763bbcbfe7c75abd3579c203c7f35048257403c7279e0`
-- Explorer contract: `https://explorer-bradbury.genlayer.com/address/0xae909D9ea0867fB846e948C5636EAb56b73033e7`
-- Explorer transaction: `https://explorer-bradbury.genlayer.com/tx/0x7641fb2c257578e4319763bbcbfe7c75abd3579c203c7f35048257403c7279e0`
+- Contract address: `0x5DD69058d3EDd6226908A87Cc584f26F60Cc9De9`
+- Deployment tx: `0x256ded1ce2ff2ff7c32d0871f04dbde6dd0dee3c820dac021c5e2e8de56857a5`
+- Explorer contract: `https://explorer-bradbury.genlayer.com/address/0x5DD69058d3EDd6226908A87Cc584f26F60Cc9De9`
+- Explorer transaction: `https://explorer-bradbury.genlayer.com/tx/0x256ded1ce2ff2ff7c32d0871f04dbde6dd0dee3c820dac021c5e2e8de56857a5`
+
+#### v2 fix: close_evidence deadline enforcement
+
+Previously, `close_evidence` could be called on a claim still in the `filed`
+phase before the response deadline expired, preventing the respondent from
+using their promised response window. Now:
+
+- When phase is `filed`, the response deadline **must** have passed before
+  evidence can be closed (block-height check against `response_deadline`).
+- When phase is `responded`, evidence can still be closed at any time
+  (the respondent already replied).
 
 ## Minimal Client Integration
 

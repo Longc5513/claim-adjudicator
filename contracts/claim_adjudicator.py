@@ -290,6 +290,11 @@ class ClaimAdjudicator(gl.Contract):
         """
         Claimant or arbiter closes evidence period.
         Phase: 'filed'/'responded' -> 'evidence_closed'
+
+        When the claim is still in 'filed' phase (respondent never replied),
+        the response deadline must have passed before closing — this preserves
+        the respondent's promised response window.
+        When the claim is in 'responded' phase, evidence can be closed at any time.
         """
         normalized_id = self._normalize_id(claim_id)
         claim = self._load_claim(normalized_id)
@@ -297,6 +302,12 @@ class ClaimAdjudicator(gl.Contract):
         self._assert_phase(claim, "filed", "responded")
 
         if claim["phase"] == "filed":
+            # Must wait for the response deadline so respondent keeps their window
+            if gl.vm.block_number <= claim["response_deadline"]:
+                raise gl.vm.UserError(
+                    f"{ERR_EXPECTED} Response deadline has not passed yet; "
+                    f"the respondent still has time to reply"
+                )
             claim["respondent_reply_url"] = ""
             claim["respondent_evidence_url"] = ""
 
